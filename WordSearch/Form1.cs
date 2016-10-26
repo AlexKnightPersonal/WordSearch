@@ -39,6 +39,10 @@ namespace WordSearch
             if (!GetSize())
                 return;
 
+            //Check size of the grid
+            if (!CheckSize())
+                return;
+
             //Set size of Word Search
             dataGridView1.RowCount = dataGridView1.ColumnCount = size;
             //Ensure grid is refreshed every time
@@ -152,8 +156,26 @@ namespace WordSearch
         }
 
         //TODO
-        private void CheckSize()
+        private bool CheckSize()
         {
+            if (size > 40)
+            {
+                MessageBox.Show("The value entered for size is too large" +
+                                "\nThe max size available is 40", "Invalid Size");
+                return false;
+            }
+
+            foreach (string word in words)
+            {
+                if (word.Length*2 <= size) continue;
+                MessageBox.Show("The value entered for size is too small" +
+                                "\nIt needs to be double the length of the longest word" +
+                                "\n\"" + word + "\" is too long for the size", "Invalid Size");
+                return false;
+            }
+
+            return true;
+
             //Check whether size < longest word
         }
 
