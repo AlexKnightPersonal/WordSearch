@@ -35,14 +35,19 @@ namespace WordSearch
             EmptyGrid();
 
 
-            WriteUp("alex");
+            WriteRight("alex");
+        }
+
+        private void checkSize()
+        {
+            //Check whether size < longest word
         }
 
         private void WriteDown(string word)
         {
             //Get column and starting row
-            int column = rand.Next(size);
-            int startRow = rand.Next(size);
+            var column = rand.Next(size);
+            var startRow = rand.Next(size);
             //Ensure word doesn't overflow grid
             if ((startRow + word.Length) > size)
                 startRow = (startRow- word.Length) < 0 ? startRow - (size - word.Length) : startRow -= word.Length;
@@ -59,8 +64,8 @@ namespace WordSearch
         private void WriteUp(string word)
         {
             //Get column and starting row
-            int column = rand.Next(size);
-            int startRow = rand.Next(size);
+            var column = rand.Next(size);
+            var startRow = rand.Next(size);
             //Ensure word doesn't overflow grid
             if ((startRow - word.Length) < 0)
                 startRow = startRow + word.Length > size ? startRow + (word.Length - startRow) : startRow += word.Length - 1;
@@ -74,7 +79,41 @@ namespace WordSearch
             }
         }
 
+        private void WriteLeft(string word)
+        {
+            //Get column and starting row
+            var row = rand.Next(size);
+            var startColumn = rand.Next(size);
+            //Ensure word doesn't overflow grid
+            if ((startColumn - word.Length) < 0)
+                startColumn = startColumn + word.Length > size ? startColumn + (word.Length - startColumn) : startColumn += word.Length - 1;
 
+            //Write word
+            var step = 0;
+            foreach (var c in word.ToCharArray())
+            {
+                dataGridView1.Rows[row].Cells[startColumn - step].Value = c;
+                step++;
+            }
+        }
+
+        private void WriteRight(string word)
+        {
+            //Get column and starting row
+            var row = rand.Next(size);
+            var startColumn = rand.Next(size);
+            //Ensure word doesn't overflow grid
+            if ((startColumn + word.Length) > size)
+                startColumn = (startColumn - word.Length) < 0 ? startColumn - (size - word.Length) : startColumn -= word.Length;
+
+            //Write word
+            var step = 0;
+            foreach (var c in word.ToCharArray())
+            {
+                dataGridView1.Rows[row].Cells[startColumn + step].Value = c;
+                step++;
+            }
+        }
 
         private void EmptyGrid()
         {
