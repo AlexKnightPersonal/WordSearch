@@ -29,15 +29,17 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.txtSize = new System.Windows.Forms.TextBox();
             this.btnGo = new System.Windows.Forms.Button();
+            this.txtSize = new System.Windows.Forms.TextBox();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.lblSize = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lblSize);
             this.groupBox1.Controls.Add(this.btnGo);
             this.groupBox1.Controls.Add(this.txtSize);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
@@ -47,6 +49,25 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Grid Settings";
+            // 
+            // btnGo
+            // 
+            this.btnGo.Location = new System.Drawing.Point(113, 36);
+            this.btnGo.Name = "btnGo";
+            this.btnGo.Size = new System.Drawing.Size(75, 23);
+            this.btnGo.TabIndex = 1;
+            this.btnGo.Text = "Go";
+            this.btnGo.UseVisualStyleBackColor = true;
+            this.btnGo.Click += new System.EventHandler(this.btnGo_Click);
+            // 
+            // txtSize
+            // 
+            this.txtSize.Location = new System.Drawing.Point(7, 38);
+            this.txtSize.Name = "txtSize";
+            this.txtSize.Size = new System.Drawing.Size(100, 20);
+            this.txtSize.TabIndex = 0;
+            this.txtSize.Text = "6";
+            this.txtSize.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSize_KeyPress);
             // 
             // dataGridView1
             // 
@@ -66,23 +87,14 @@
             this.dataGridView1.Size = new System.Drawing.Size(580, 490);
             this.dataGridView1.TabIndex = 1;
             // 
-            // txtSize
+            // lblSize
             // 
-            this.txtSize.Location = new System.Drawing.Point(7, 20);
-            this.txtSize.Name = "txtSize";
-            this.txtSize.Size = new System.Drawing.Size(100, 20);
-            this.txtSize.TabIndex = 0;
-            this.txtSize.Text = "6";
-            // 
-            // btnGo
-            // 
-            this.btnGo.Location = new System.Drawing.Point(113, 18);
-            this.btnGo.Name = "btnGo";
-            this.btnGo.Size = new System.Drawing.Size(75, 23);
-            this.btnGo.TabIndex = 1;
-            this.btnGo.Text = "Go";
-            this.btnGo.UseVisualStyleBackColor = true;
-            this.btnGo.Click += new System.EventHandler(this.btnGo_Click);
+            this.lblSize.AutoSize = true;
+            this.lblSize.Location = new System.Drawing.Point(7, 20);
+            this.lblSize.Name = "lblSize";
+            this.lblSize.Size = new System.Drawing.Size(56, 13);
+            this.lblSize.TabIndex = 2;
+            this.lblSize.Text = "Enter size:";
             // 
             // Form1
             // 
@@ -106,6 +118,7 @@
         private System.Windows.Forms.Button btnGo;
         private System.Windows.Forms.TextBox txtSize;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Label lblSize;
     }
 }
 

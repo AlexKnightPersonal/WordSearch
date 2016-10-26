@@ -24,7 +24,8 @@ namespace WordSearch
         private void btnGo_Click(object sender, EventArgs e)
         {
             //Get size of Word Search
-            size = Convert.ToInt32(txtSize.Text);
+            if (!getSize())
+                return;
 
             //For debug
             //size = 6;
@@ -36,6 +37,21 @@ namespace WordSearch
 
 
             WriteRight("alex");
+        }
+
+        private bool getSize()
+        {
+            try
+            {
+                size = Convert.ToInt32(txtSize.Text);
+            }
+            catch (FormatException e)
+            {
+                MessageBox.Show("The value entered for size was not acceptable." +
+                                "\n Please try again", "Invalid Input");
+                return false;
+            }
+            return true;
         }
 
         private void checkSize()
@@ -123,6 +139,11 @@ namespace WordSearch
             {
                 cell.Value = string.Empty;
             }
+        }
+
+        private void txtSize_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar
         }
     }
 }
