@@ -112,20 +112,59 @@ namespace WordSearch
             }
         }
 
+        private void dataGridView1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (dataGridView1.SelectedCells.Count == 0)
+                return;
+
+            checkAnswer();
+        }
+
+        private void checkAnswer()
+        {
+            foreach (Word word in wordsInCells)
+            {
+                if (word.Length != dataGridView1.SelectedCells.Count) continue;
+
+                if (!checkHighlight(word)) continue;
+
+                highLightWord(word);
+            }
+        }
+
+        private bool checkHighlight(Word word)
+        {
+            int rowChange = getRowChange(word.Direction);
+            int columnChange = getColumnChange(word.Direction);
+
+            var step = 0;
+            for (int i = 0; i < word.Length; i++)
+            {
+                if (!dataGridView1.Rows[word.Row + (rowChange*i)].Cells[word.Column + (columnChange*i)].Selected)
+                    return false;
+            }
+            return true;
+        }
+
         private void showAnswers()
         {
             //Highlight words
             foreach (Word word in wordsInCells)
             {
-                int rowChange = getRowChange(word.Direction);
-                int columnChange = getColumnChange(word.Direction);
+                highLightWord(word);
+            }
+        }
 
-                var step = 0;
-                for (int i = 0; i < word.Length; i++)
-                {
-                    dataGridView1.Rows[word.Row + (rowChange*i)].Cells[word.Column + (columnChange*i)].Style.BackColor =
-                        Color.LightGreen;
-                }
+        private void highLightWord(Word word)
+        {
+            int rowChange = getRowChange(word.Direction);
+            int columnChange = getColumnChange(word.Direction);
+
+            var step = 0;
+            for (int i = 0; i < word.Length; i++)
+            {
+                dataGridView1.Rows[word.Row + (rowChange * i)].Cells[word.Column + (columnChange * i)].Style.BackColor =
+                    Color.LightGreen;
             }
         }
 
