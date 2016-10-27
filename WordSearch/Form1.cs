@@ -177,7 +177,7 @@ namespace WordSearch
             return true;
         }
 
-        private int getColumnChange(int direction)
+        private int getRowChange(int direction)
         {
             switch (direction)
             {
@@ -190,7 +190,7 @@ namespace WordSearch
             }  
         }
 
-        private int getRowChange(int direction)
+        private int getColumnChange(int direction)
         {
             switch (direction)
             {
