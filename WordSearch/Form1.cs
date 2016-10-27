@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -38,6 +40,8 @@ namespace WordSearch
         private ArrayList words;
         //Letters for filling cells
         private const string letters = "abcdefghijklmnopqrstuvwxyz";
+
+        private List<Word> wordsInCells;
 
         private void btnGo_Click(object sender, EventArgs e)
         {
@@ -90,6 +94,59 @@ namespace WordSearch
             DisplayWords();
         }
 
+        private void btnShowAnswers_Click(object sender, EventArgs e)
+        {
+            //Avoid error if grid is not setup
+            if (wordsInCells == null)
+                return;
+
+            if (btnShowAnswers.Text == "Show Answers")
+            {
+                showAnswers();
+                btnShowAnswers.Text = "Hide Answers";
+            }
+            else
+            {
+                hideAnswers();
+                btnShowAnswers.Text = "Show Answers";
+            }
+        }
+
+        private void showAnswers()
+        {
+            //Highlight words
+            foreach (Word word in wordsInCells)
+            {
+                int rowChange = getRowChange(word.Direction);
+                int columnChange = getColumnChange(word.Direction);
+
+                var step = 0;
+                for (int i = 0; i < word.Length; i++)
+                {
+                    dataGridView1.Rows[word.Row + (rowChange*i)].Cells[word.Column + (columnChange*i)].Style.BackColor =
+                        Color.LightGreen;
+                }
+            }
+        }
+
+        private void hideAnswers()
+        {
+            //UnHighlight words (Instead of doing all)
+
+            foreach (Word word in wordsInCells)
+            {
+                int rowChange = getRowChange(word.Direction);
+                int columnChange = getColumnChange(word.Direction);
+
+                var step = 0;
+                for (int i = 0; i < word.Length; i++)
+                {
+                    dataGridView1.Rows[word.Row + (rowChange*i)].Cells[word.Column + (columnChange*i)].Style.BackColor =
+                        Color.White;
+                }
+            }
+        }
+
         private void DisplayWords()
         {
             //Clear the box
@@ -103,6 +160,7 @@ namespace WordSearch
 
         private void WriteWords()
         {
+            wordsInCells = new List<Word>();
             //Pick random direction, and search for a suitable space for the word until found
             foreach (string word in words)
             {
@@ -143,9 +201,10 @@ namespace WordSearch
                 var step = 0;
                 foreach (var c in word.ToCharArray())
                 {
-                    dataGridView1.Rows[row + (rowChange * step)].Cells[column + (columnChange * step)].Value = c;
+                    dataGridView1.Rows[row + (rowChange*step)].Cells[column + (columnChange*step)].Value = c;
                     step++;
                 }
+                wordsInCells.Add(new Word(word, row, column, direction));
 
             }
 
@@ -329,6 +388,22 @@ namespace WordSearch
         {
             if (e.KeyCode == Keys.Enter)
                 btnRemoveWord_Click(sender, new EventArgs());
+        }
+    }
+
+    internal class Word
+    {
+        public int Length { get; }
+        public int Row { get; }
+        public int Column { get; }
+        public int Direction { get; }
+
+        public Word(string word, int row, int column, int direction)
+        {
+            this.Length = word.Length;
+            this.Row = row;
+            this.Column = column;
+            this.Direction = direction;
         }
     }
 }

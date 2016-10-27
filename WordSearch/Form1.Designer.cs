@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnShowAnswers = new System.Windows.Forms.Button();
             this.rtxtWords = new System.Windows.Forms.RichTextBox();
             this.lblFindWords = new System.Windows.Forms.Label();
             this.btnRemoveWord = new System.Windows.Forms.Button();
@@ -47,6 +48,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnShowAnswers);
             this.groupBox1.Controls.Add(this.rtxtWords);
             this.groupBox1.Controls.Add(this.lblFindWords);
             this.groupBox1.Controls.Add(this.btnRemoveWord);
@@ -65,6 +67,16 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Grid Settings";
+            // 
+            // btnShowAnswers
+            // 
+            this.btnShowAnswers.Location = new System.Drawing.Point(68, 436);
+            this.btnShowAnswers.Name = "btnShowAnswers";
+            this.btnShowAnswers.Size = new System.Drawing.Size(120, 23);
+            this.btnShowAnswers.TabIndex = 11;
+            this.btnShowAnswers.Text = "Show Answers";
+            this.btnShowAnswers.UseVisualStyleBackColor = true;
+            this.btnShowAnswers.Click += new System.EventHandler(this.btnShowAnswers_Click);
             // 
             // rtxtWords
             // 
@@ -218,6 +230,7 @@
         private System.Windows.Forms.TextBox txtAddWord;
         private System.Windows.Forms.RichTextBox rtxtWords;
         private System.Windows.Forms.Label lblFindWords;
+        private System.Windows.Forms.Button btnShowAnswers;
     }
 }
 
