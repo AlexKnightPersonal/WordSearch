@@ -128,6 +128,7 @@
             this.txtRemoveWord.Name = "txtRemoveWord";
             this.txtRemoveWord.Size = new System.Drawing.Size(100, 20);
             this.txtRemoveWord.TabIndex = 4;
+            this.txtRemoveWord.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtRemoveWord_KeyDown);
             this.txtRemoveWord.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtRemoveWord_KeyPress);
             // 
             // txtAddWord
@@ -136,6 +137,7 @@
             this.txtAddWord.Name = "txtAddWord";
             this.txtAddWord.Size = new System.Drawing.Size(100, 20);
             this.txtAddWord.TabIndex = 3;
+            this.txtAddWord.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtAddWord_KeyDown);
             this.txtAddWord.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtAddWord_KeyPress);
             // 
             // lblSize
@@ -164,6 +166,7 @@
             this.txtSize.Size = new System.Drawing.Size(100, 20);
             this.txtSize.TabIndex = 0;
             this.txtSize.Text = "20";
+            this.txtSize.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSize_KeyDown);
             this.txtSize.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSize_KeyPress);
             // 
             // dataGridView1

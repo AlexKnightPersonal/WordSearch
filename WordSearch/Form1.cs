@@ -59,7 +59,7 @@ namespace WordSearch
 
         private void btnAddWord_Click(object sender, EventArgs e)
         {
-            //If it's not all letter show a message
+            //If it's not all letters show a message
             if (!txtAddWord.Text.All(char.IsLetter)
                 || txtAddWord.Text == "")
             {
@@ -103,7 +103,7 @@ namespace WordSearch
 
         private void WriteWords()
         {
-            //Pick a random direction and write the word
+            //Pick random direction, and search for a suitable space for the word until found
             foreach (string word in words)
             {
                 int direction;
@@ -113,13 +113,14 @@ namespace WordSearch
                 int columnChange;
                 do
                 {
-                    //direction = rand.Next(4);
-                    direction = 0;
+                    direction = rand.Next(4);
+                    //direction = 0;
                     rowChange = getRowChange(direction);
                     columnChange = getColumnChange(direction);
                     column = rand.Next(size);
                     row = rand.Next(size);
 
+                    //Checking for overflow edge of grid
                     switch (direction)
                     {
                         case 0:
@@ -138,6 +139,7 @@ namespace WordSearch
 
                 } while (!isValidStart(row, column, rowChange, columnChange, word));
 
+                //Writing the actual word
                 var step = 0;
                 foreach (var c in word.ToCharArray())
                 {
@@ -159,6 +161,7 @@ namespace WordSearch
 
         private bool isValidStart(int row, int column, int rowChange, int columnChange, string word)
         {
+            //Check whether start is actually valid
             var step = 0;
             foreach (var c in word.ToCharArray())
             {
@@ -228,6 +231,7 @@ namespace WordSearch
 
         private bool CheckSize()
         {
+            //Set a max size of 40 (still 1.6k boxes)
             if (size > 40)
             {
                 MessageBox.Show("The value entered for size is too large" +
@@ -235,6 +239,7 @@ namespace WordSearch
                 return false;
             }
 
+            //Make sure size = longest word x 2
             foreach (string word in words)
             {
                 if (word.Length*2 <= size) continue;
@@ -245,8 +250,6 @@ namespace WordSearch
             }
 
             return true;
-
-            //Check whether size < longest word
         }
 
         private int checkOverflowUp(int row, int length)
@@ -291,7 +294,7 @@ namespace WordSearch
         private static void CheckWordKeypress(KeyPressEventArgs e)
         {
             //Ignore keypress if it isn't a letter
-            e.Handled = !char.IsLetter(e.KeyChar);
+            e.Handled = !char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar);
         }
 
         private void txtSize_KeyPress(object sender, KeyPressEventArgs e)
@@ -308,6 +311,24 @@ namespace WordSearch
         private void txtRemoveWord_KeyPress(object sender, KeyPressEventArgs e)
         {
             CheckWordKeypress(e);
+        }
+
+        private void txtSize_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                btnGo_Click(sender, new EventArgs());
+        }
+
+        private void txtAddWord_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                btnAddWord_Click(sender, new EventArgs());
+        }
+
+        private void txtRemoveWord_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                btnRemoveWord_Click(sender, new EventArgs());
         }
     }
 }
