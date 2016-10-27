@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WordSearch
@@ -19,7 +13,19 @@ namespace WordSearch
             //Init random
             rand = new Random();
             //Default words
-            words = new ArrayList() { "integer", "array", "byte", "boolean", "for", "string", "parameter", "while", "method", "loop"};
+            words = new ArrayList()
+            {
+                "integer",
+                "array",
+                "byte",
+                "boolean",
+                "for",
+                "string",
+                "parameter",
+                "while",
+                "method",
+                "loop"
+            };
             //Display the default wors
             DisplayWords();
         }
@@ -27,7 +33,7 @@ namespace WordSearch
         //Size of the wordsearch
         private int size;
         //The random var
-        private readonly Random rand;
+        public static Random rand;
         //The words in the word search
         private ArrayList words;
         //Letters for filling cells
@@ -100,43 +106,108 @@ namespace WordSearch
             //Pick a random direction and write the word
             foreach (string word in words)
             {
-                PickDirection(word, rand.Next(4));
+                int direction;
+                int row;
+                int column;
+                int rowChange;
+                int columnChange;
+                do
+                {
+                    //direction = rand.Next(4);
+                    direction = 0;
+                    rowChange = getRowChange(direction);
+                    columnChange = getColumnChange(direction);
+                    column = rand.Next(size);
+                    row = rand.Next(size);
+
+                    switch (direction)
+                    {
+                        case 0:
+                            row = checkOverflowUp(row, word.Length);
+                            break;
+                        case 1:
+                            column = checkOverflowRight(column, word.Length);
+                            break;
+                        case 2:
+                            row = checkOverflowDown(row, word.Length);
+                            break;
+                        case 3:
+                            column = checkOverflowLeft(column, word.Length);
+                            break;
+                    }
+
+                } while (!isValidStart(row, column, rowChange, columnChange, word));
+
+                var step = 0;
+                foreach (var c in word.ToCharArray())
+                {
+                    dataGridView1.Rows[row + (rowChange * step)].Cells[column + (columnChange * step)].Value = c;
+                    step++;
+                }
+
             }
 
             //Fill all the empty cells with random chars
-            foreach (var cell in from DataGridViewRow row in dataGridView1.Rows
-                                 from DataGridViewCell cell in row.Cells
-                                 select cell)
+            foreach (var cell in from DataGridViewRow gridRow in dataGridView1.Rows
+                from DataGridViewCell cell in gridRow.Cells
+                select cell)
             {
                 if (cell.Value == "")
                     cell.Value = RandomChar();
             }
         }
 
+        private bool isValidStart(int row, int column, int rowChange, int columnChange, string word)
+        {
+            var step = 0;
+            foreach (var c in word.ToCharArray())
+            {
+                if (dataGridView1.Rows[row + (rowChange*step)].Cells[column + (columnChange*step)].Value == "")
+                {
+                    step++;
+                    continue;
+                }
+                if (c.Equals(dataGridView1.Rows[row + (rowChange*step)].Cells[column + (columnChange*step)].Value))
+                {
+                    step++;
+                    continue;
+                }
+                return false;
+            }
+            return true;
+        }
+
+        private int getColumnChange(int direction)
+        {
+            switch (direction)
+            {
+                case 0:
+                    return -1;
+                case 2:
+                    return 1;
+                default:
+                    return 0;
+            }  
+        }
+
+        private int getRowChange(int direction)
+        {
+            switch (direction)
+            {
+                case 1:
+                    return 1;
+                case 3:
+                    return -1;
+                default:
+                    return 0;
+            }
+        }
+
+
         private char RandomChar()
         {
             //Getting a random char
             return letters[rand.Next(letters.Length)];
-        }
-
-        private void PickDirection(string word, int direction)
-        {
-            //Placing word in different directions
-            switch (direction)
-            {
-                case 0:
-                    WriteUp(word);
-                    break;
-                case 1:
-                    WriteRight(word);
-                    break;
-                case 2:
-                    WriteDown(word);
-                    break;
-                case 3:
-                    WriteLeft(word);
-                    break;
-            }
         }
 
         private bool GetSize()
@@ -155,7 +226,6 @@ namespace WordSearch
             return true;
         }
 
-        //TODO
         private bool CheckSize()
         {
             if (size > 40)
@@ -179,82 +249,40 @@ namespace WordSearch
             //Check whether size < longest word
         }
 
-        private void WriteDown(string word)
+        private int checkOverflowUp(int row, int length)
         {
-            //Get column and starting row
-            var column = rand.Next(size);
-            var startRow = rand.Next(size);
-            //Ensure word doesn't overflow grid
-            if ((startRow + word.Length) >= size)
-                startRow -= ((startRow + word.Length) - size);
-            //Write word
-            var step = 0;
-            foreach (var c in word.ToCharArray())
-            {
-                dataGridView1.Rows[startRow + step].Cells[column].Value = c;
-                step++;
-            }
+            if ((row - length) < 0)
+                row -= row - length;
+            return row;
         }
 
-        private void WriteUp(string word)
+        private int checkOverflowDown(int row, int length)
         {
-            //Get column and starting row
-            var column = rand.Next(size);
-            var startRow = rand.Next(size);
-            //Ensure word doesn't overflow grid
-            if ((startRow - word.Length) < 0)
-                startRow -= startRow - word.Length;
-
-            //Write word
-            var step = 0;
-            foreach (var c in word.ToCharArray())
-            {
-                dataGridView1.Rows[startRow - step].Cells[column].Value = c;
-                step++;
-            }
+            if ((row + length) >= size)
+                row -= ((row + length) - size);
+            return row;
         }
 
-        private void WriteLeft(string word)
+        private int checkOverflowLeft(int column, int length)
         {
-            //Get column and starting row
-            var row = rand.Next(size);
-            var startColumn = rand.Next(size);
-            //Ensure word doesn't overflow grid
-            if ((startColumn - word.Length) < 0)
-                startColumn -= startColumn - word.Length;
-
-            //Write word
-            var step = 0;
-            foreach (var c in word.ToCharArray())
-            {
-                dataGridView1.Rows[row].Cells[startColumn - step].Value = c;
-                step++;
-            }
+            if ((column - length) < 0)
+                column -= column - length;
+            return column;
         }
 
-        private void WriteRight(string word)
+        private int checkOverflowRight(int column, int length)
         {
-            //Get column and starting row
-            var row = rand.Next(size);
-            var startColumn = rand.Next(size);
-            //Ensure word doesn't overflow grid
-            if ((startColumn + word.Length) >= size)
-                startColumn -= ((startColumn + word.Length) - size);
-            //Write word
-            var step = 0;
-            foreach (var c in word.ToCharArray())
-            {
-                dataGridView1.Rows[row].Cells[startColumn + step].Value = c;
-                step++;
-            }
+            if ((column + length) >= size)
+                column -= ((column + length) - size);
+            return column;
         }
 
         private void EmptyGrid()
         {
             //Set value in every cell to empty
             foreach (var cell in from DataGridViewRow row in dataGridView1.Rows
-                                 from DataGridViewCell cell in row.Cells
-                                 select cell)
+                from DataGridViewCell cell in row.Cells
+                select cell)
             {
                 cell.Value = string.Empty;
             }
