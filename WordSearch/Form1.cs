@@ -102,12 +102,12 @@ namespace WordSearch
 
             if (btnShowAnswers.Text == "Show Answers")
             {
-                showAnswers();
+                ShowAnswers();
                 btnShowAnswers.Text = "Hide Answers";
             }
             else
             {
-                hideAnswers();
+                HideAnswers();
                 btnShowAnswers.Text = "Show Answers";
             }
         }
@@ -117,22 +117,27 @@ namespace WordSearch
             if (dataGridView1.SelectedCells.Count == 0)
                 return;
 
-            checkAnswer();
+            CheckAnswer();
+
+            foreach (DataGridViewCell cell in dataGridView1.SelectedCells)
+            {
+                cell.Selected = false;
+            }
         }
 
-        private void checkAnswer()
+        private void CheckAnswer()
         {
             foreach (Word word in wordsInCells)
             {
                 if (word.Length != dataGridView1.SelectedCells.Count) continue;
 
-                if (!checkHighlight(word)) continue;
+                if (!CheckHighlight(word)) continue;
 
-                highLightWord(word);
+                HighLightWord(word);
             }
         }
 
-        private bool checkHighlight(Word word)
+        private bool CheckHighlight(Word word)
         {
             int rowChange = getRowChange(word.Direction);
             int columnChange = getColumnChange(word.Direction);
@@ -146,16 +151,16 @@ namespace WordSearch
             return true;
         }
 
-        private void showAnswers()
+        private void ShowAnswers()
         {
             //Highlight words
             foreach (Word word in wordsInCells)
             {
-                highLightWord(word);
+                HighLightWord(word);
             }
         }
 
-        private void highLightWord(Word word)
+        private void HighLightWord(Word word)
         {
             int rowChange = getRowChange(word.Direction);
             int columnChange = getColumnChange(word.Direction);
@@ -168,7 +173,7 @@ namespace WordSearch
             }
         }
 
-        private void hideAnswers()
+        private void HideAnswers()
         {
             //UnHighlight words (Instead of doing all)
 
