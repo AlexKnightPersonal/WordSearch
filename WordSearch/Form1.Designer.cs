@@ -42,12 +42,14 @@
             this.btnGo = new System.Windows.Forms.Button();
             this.txtSize = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.btnDebug = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnDebug);
             this.groupBox1.Controls.Add(this.btnShowAnswers);
             this.groupBox1.Controls.Add(this.rtxtWords);
             this.groupBox1.Controls.Add(this.lblFindWords);
@@ -200,6 +202,17 @@
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseUp);
             // 
+            // btnDebug
+            // 
+            this.btnDebug.Location = new System.Drawing.Point(113, 13);
+            this.btnDebug.Name = "btnDebug";
+            this.btnDebug.Size = new System.Drawing.Size(75, 23);
+            this.btnDebug.TabIndex = 12;
+            this.btnDebug.Text = "DEBUG";
+            this.btnDebug.UseVisualStyleBackColor = true;
+            this.btnDebug.Visible = false;
+            this.btnDebug.Click += new System.EventHandler(this.btnDebug_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -208,7 +221,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.groupBox1);
             this.Name = "Form1";
-            this.Text = "Word Search";
+            this.Text = "GridWord Search";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -232,6 +245,7 @@
         private System.Windows.Forms.RichTextBox rtxtWords;
         private System.Windows.Forms.Label lblFindWords;
         private System.Windows.Forms.Button btnShowAnswers;
+        private System.Windows.Forms.Button btnDebug;
     }
 }
 

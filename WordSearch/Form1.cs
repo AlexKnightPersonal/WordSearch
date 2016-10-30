@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace WordSearch
 {
@@ -14,38 +16,38 @@ namespace WordSearch
             InitializeComponent();
             //Init random
             rand = new Random();
-            //Default words
-            words = new ArrayList()
-            {
-                "integer",
-                "array",
-                "byte",
-                "boolean",
-                "for",
-                "string",
-                "parameter",
-                "while",
-                "method",
-                "loop"
-            };
+
+            words = new List<GridWord>() {
+                new GridWord("integer"),
+                new GridWord("array"),
+                new GridWord("byte"),
+                new GridWord("boolean"),
+                new GridWord("for"),
+                new GridWord("string"),
+                new GridWord("parameter"),
+                new GridWord("while"),
+                new GridWord("method"),
+                new GridWord("loop")};
+
             //Display the default wors
             DisplayWords();
+
+            if (Debugger.IsAttached)
+                btnDebug.Visible = true;
         }
 
         //Size of the wordsearch
         private int size;
         //The random var
-        public static Random rand;
-        //The words in the word search
-        private ArrayList words;
+        private static Random rand;
         //Letters for filling cells
-        private const string letters = "abcdefghijklmnopqrstuvwxyz";
+        private const string Letters = "abcdefghijklmnopqrstuvwxyz";
 
-        private List<Word> wordsInCells;
+        private List<GridWord> words;
 
         private void btnGo_Click(object sender, EventArgs e)
         {
-            //Get size of Word Search
+            //Get size of GridWord Search
             if (!GetSize())
                 return;
 
@@ -53,7 +55,7 @@ namespace WordSearch
             if (!CheckSize())
                 return;
 
-            //Set size of Word Search
+            //Set size of GridWord Search
             dataGridView1.RowCount = dataGridView1.ColumnCount = size;
             //Ensure grid is refreshed every time
             EmptyGrid();
@@ -72,7 +74,7 @@ namespace WordSearch
                 return;
             }
             //Add the word
-            words.Add(txtAddWord.Text);
+            words.Add(new GridWord(txtAddWord.Text));
             //Clear the text box
             txtAddWord.Text = "";
             //Refresh word display
@@ -82,9 +84,9 @@ namespace WordSearch
         private void btnRemoveWord_Click(object sender, EventArgs e)
         {
             //Check if the word is in the list, if so remove it
-            foreach (string word in words)
+            foreach (var word in words)
             {
-                if (txtRemoveWord.Text != word) continue;
+                if (txtRemoveWord.Text != word.Word) continue;
                 words.Remove(word);
                 break;
             }
@@ -97,7 +99,7 @@ namespace WordSearch
         private void btnShowAnswers_Click(object sender, EventArgs e)
         {
             //Avoid error if grid is not setup
-            if (wordsInCells == null)
+            if (words == null)
                 return;
 
             if (btnShowAnswers.Text == "Show Answers")
@@ -127,17 +129,18 @@ namespace WordSearch
 
         private void CheckAnswer()
         {
-            foreach (Word word in wordsInCells)
+            foreach (GridWord word in words)
             {
                 if (word.Length != dataGridView1.SelectedCells.Count) continue;
 
                 if (!CheckHighlight(word)) continue;
 
                 HighLightWord(word);
+                word.Found = true;
             }
         }
 
-        private bool CheckHighlight(Word word)
+        private bool CheckHighlight(GridWord word)
         {
             int rowChange = getRowChange(word.Direction);
             int columnChange = getColumnChange(word.Direction);
@@ -154,13 +157,13 @@ namespace WordSearch
         private void ShowAnswers()
         {
             //Highlight words
-            foreach (Word word in wordsInCells)
+            foreach (GridWord word in words)
             {
                 HighLightWord(word);
             }
         }
 
-        private void HighLightWord(Word word)
+        private void HighLightWord(GridWord word)
         {
             int rowChange = getRowChange(word.Direction);
             int columnChange = getColumnChange(word.Direction);
@@ -177,7 +180,7 @@ namespace WordSearch
         {
             //UnHighlight words (Instead of doing all)
 
-            foreach (Word word in wordsInCells)
+            foreach (GridWord word in words)
             {
                 int rowChange = getRowChange(word.Direction);
                 int columnChange = getColumnChange(word.Direction);
@@ -189,6 +192,11 @@ namespace WordSearch
                         Color.White;
                 }
             }
+
+            foreach (var word in words)
+            {
+                word.Found = false;
+            }
         }
 
         private void DisplayWords()
@@ -196,17 +204,18 @@ namespace WordSearch
             //Clear the box
             rtxtWords.Text = "";
             //Write out the words on seperate lines
+
             foreach (var word in words)
             {
-                rtxtWords.Text += word + "\n";
+                rtxtWords.Text += word.Word + "\n";
             }
+            //TODO Strikethrough
         }
 
         private void WriteWords()
         {
-            wordsInCells = new List<Word>();
             //Pick random direction, and search for a suitable space for the word until found
-            foreach (string word in words)
+            foreach (var word in words)
             {
                 int direction;
                 int row;
@@ -239,17 +248,19 @@ namespace WordSearch
                             break;
                     }
 
-                } while (!isValidStart(row, column, rowChange, columnChange, word));
+                } while (!isValidStart(row, column, rowChange, columnChange, word.Word));
 
                 //Writing the actual word
                 var step = 0;
-                foreach (var c in word.ToCharArray())
+                foreach (var c in word.Word.ToCharArray())
                 {
                     dataGridView1.Rows[row + (rowChange*step)].Cells[column + (columnChange*step)].Value = c;
                     step++;
                 }
-                wordsInCells.Add(new Word(word, row, column, direction));
 
+                word.Row = row;
+                word.Column = column;
+                word.Direction = direction;
             }
 
             //Fill all the empty cells with random chars
@@ -313,7 +324,7 @@ namespace WordSearch
         private char RandomChar()
         {
             //Getting a random char
-            return letters[rand.Next(letters.Length)];
+            return Letters[rand.Next(Letters.Length)];
         }
 
         private bool GetSize()
@@ -343,12 +354,12 @@ namespace WordSearch
             }
 
             //Make sure size = longest word x 2
-            foreach (string word in words)
+            foreach (var word in words)
             {
                 if (word.Length*2 <= size) continue;
                 MessageBox.Show("The value entered for size is too small" +
                                 "\nIt needs to be double the length of the longest word" +
-                                "\n\"" + word + "\" is too long for the size", "Invalid Size");
+                                "\n\"" + word.Word + "\" is too long for the size", "Invalid Size");
                 return false;
             }
 
@@ -433,21 +444,34 @@ namespace WordSearch
             if (e.KeyCode == Keys.Enter)
                 btnRemoveWord_Click(sender, new EventArgs());
         }
+
+        private void btnDebug_Click(object sender, EventArgs e)
+        {
+            foreach (var word in words)
+            {
+                Debug.Print(word.ToString());
+            }
+        }
     }
 
-    internal class Word
+    internal class GridWord
     {
+        public string Word { get; }
         public int Length { get; }
-        public int Row { get; }
-        public int Column { get; }
-        public int Direction { get; }
+        public int Row { get; set; }
+        public int Column { get; set; }
+        public int Direction { get; set; }
+        public bool Found { get; set; }
 
-        public Word(string word, int row, int column, int direction)
+        public GridWord(string word)
         {
+            this.Word = word;
             this.Length = word.Length;
-            this.Row = row;
-            this.Column = column;
-            this.Direction = direction;
+        }
+
+        public override string ToString()
+        {
+            return $"[{Word}]. Starting at {Column}, {Row}. Going in direction {Direction}. Found = {Found}";
         }
     }
 }
