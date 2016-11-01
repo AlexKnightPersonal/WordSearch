@@ -45,8 +45,10 @@ namespace WordSearch
 
         private List<GridWord> words;
 
+        private char[,] chars;
+
         private void btnGo_Click(object sender, EventArgs e)
-        {
+        { 
             //Get size of GridWord Search
             if (!GetSize())
                 return;
@@ -55,12 +57,19 @@ namespace WordSearch
             if (!CheckSize())
                 return;
 
+            chars = new char[size,size];
+
             //Set size of GridWord Search
             dataGridView1.RowCount = dataGridView1.ColumnCount = size;
+
             //Ensure grid is refreshed every time
-            EmptyGrid();
-            //Fill the word search
-            WriteWords();
+            //EmptyGrid();
+
+            //Work out where words will go
+            WriteWordsInArray();
+
+            //Write the words in the grid
+            WriteWordsInGrid();
         }
 
         private void btnAddWord_Click(object sender, EventArgs e)
@@ -181,7 +190,6 @@ namespace WordSearch
         private void HideAnswers()
         {
             //UnHighlight words (Instead of doing all)
-
             foreach (GridWord word in words)
             {
                 int rowChange = getRowChange(word.Direction);
@@ -195,10 +203,10 @@ namespace WordSearch
                 }
             }
             //Chose to remove this
-//            foreach (var word in words)
-//            {
-//                word.Found = false;
-//            }
+            foreach (var word in words)
+            {
+                word.Found = false;
+            }
         }
 
         private void DisplayWordsInBox()
@@ -218,7 +226,20 @@ namespace WordSearch
             //TODO Strikethrough
         }
 
-        private void WriteWords()
+        private void WriteWordsInGrid()
+        {
+            for (var row = 0; row < size; row++)
+            {
+                for (var column = 0; column < size; column++)
+                {
+                    dataGridView1.Rows[row].Cells[column].Value = (chars[row, column] != 0
+                        ? chars[row, column]
+                        : RandomChar());
+                }
+            }
+        }
+
+        private void WriteWordsInArray()
         {
             //Pick random direction, and search for a suitable space for the word until found
             foreach (var word in words)
@@ -260,7 +281,8 @@ namespace WordSearch
                 var step = 0;
                 foreach (var c in word.Word.ToCharArray())
                 {
-                    dataGridView1.Rows[row + (rowChange*step)].Cells[column + (columnChange*step)].Value = c;
+                    chars[row + (rowChange*step), column + (columnChange*step)] = c;
+                    //dataGridView1.Rows[row + (rowChange*step)].Cells[column + (columnChange*step)].Value = c;
                     step++;
                 }
 
@@ -269,19 +291,28 @@ namespace WordSearch
                 word.Direction = direction;
             }
 
-            FillEmptyCells();
+            //FillEmptyCells();
         }
 
         private void FillEmptyCells()
         {
             //Fill all the empty cells with random chars
-            foreach (var cell in from DataGridViewRow gridRow in dataGridView1.Rows
+            for (var row = 0; row < size; row++)
+            {
+                for (var column = 0; column < size; column++)
+                {
+                    if (chars[row, column] != 0) continue;
+                    chars[row, column] = RandomChar();
+                }
+            }
+
+            /*foreach (var cell in from DataGridViewRow gridRow in dataGridView1.Rows
                                  from DataGridViewCell cell in gridRow.Cells
                                  select cell)
             {
                 if (cell.Value == "")
                     cell.Value = RandomChar();
-            }
+            }*/
         }
 
         private bool isValidStart(int row, int column, int rowChange, int columnChange, string word)
@@ -290,12 +321,12 @@ namespace WordSearch
             var step = 0;
             foreach (var c in word.ToCharArray())
             {
-                if (dataGridView1.Rows[row + (rowChange*step)].Cells[column + (columnChange*step)].Value == "")
+                if (chars[row + (rowChange * step), column + (columnChange * step)] == 0)
                 {
                     step++;
                     continue;
                 }
-                if (c.Equals(dataGridView1.Rows[row + (rowChange*step)].Cells[column + (columnChange*step)].Value))
+                if (c.Equals(chars[row + (rowChange * step), column + (columnChange * step)]))
                 {
                     step++;
                     continue;
@@ -458,10 +489,37 @@ namespace WordSearch
 
         private void btnDebug_Click(object sender, EventArgs e)
         {
-            foreach (var word in words)
+            Stopwatch timer = new Stopwatch();
+
+            timer.Start();
+            btnGo_Click(sender, e);
+            timer.Stop();
+            Debug.Print(timer.ElapsedMilliseconds.ToString());
+
+            timer.Reset();
+            long time = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                timer.Start();
+                btnGo_Click(sender, e);
+                timer.Stop();
+                //Debug.Print(timer.ElapsedMilliseconds.ToString());
+                time += timer.ElapsedMilliseconds;
+                timer.Reset();
+            }
+            timer.Stop();
+            time = time/100;
+            Debug.Print(time.ToString());
+
+            timer.Reset();
+            timer.Start();
+            btnGo_Click(sender, e);
+            timer.Stop();
+            Debug.Print(timer.ElapsedMilliseconds.ToString());
+            /*foreach (var word in words)
             {
                 Debug.Print(word.ToString());
-            }
+            }*/
         }
     }
 
