@@ -30,7 +30,7 @@ namespace WordSearch
                 new GridWord("loop")};
 
             //Display the default wors
-            DisplayWords();
+            DisplayWordsInBox();
 
             if (Debugger.IsAttached)
                 btnDebug.Visible = true;
@@ -78,7 +78,7 @@ namespace WordSearch
             //Clear the text box
             txtAddWord.Text = "";
             //Refresh word display
-            DisplayWords();
+            DisplayWordsInBox();
         }
 
         private void btnRemoveWord_Click(object sender, EventArgs e)
@@ -93,7 +93,7 @@ namespace WordSearch
             //Clear the text box
             txtRemoveWord.Text = "";
             //Refresh word display
-            DisplayWords();
+            DisplayWordsInBox();
         }
 
         private void btnShowAnswers_Click(object sender, EventArgs e)
@@ -125,6 +125,8 @@ namespace WordSearch
             {
                 cell.Selected = false;
             }
+
+            DisplayWordsInBox();
         }
 
         private void CheckAnswer()
@@ -192,14 +194,14 @@ namespace WordSearch
                         Color.White;
                 }
             }
-
-            foreach (var word in words)
-            {
-                word.Found = false;
-            }
+            //Chose to remove this
+//            foreach (var word in words)
+//            {
+//                word.Found = false;
+//            }
         }
 
-        private void DisplayWords()
+        private void DisplayWordsInBox()
         {
             //Clear the box
             rtxtWords.Text = "";
@@ -208,6 +210,10 @@ namespace WordSearch
             foreach (var word in words)
             {
                 rtxtWords.Text += word.Word + "\n";
+                if (word.Found)
+                {
+                    rtxtWords.SelectionFont = new Font(rtxtWords.SelectionFont, FontStyle.Strikeout);
+                }
             }
             //TODO Strikethrough
         }
@@ -263,10 +269,15 @@ namespace WordSearch
                 word.Direction = direction;
             }
 
+            FillEmptyCells();
+        }
+
+        private void FillEmptyCells()
+        {
             //Fill all the empty cells with random chars
             foreach (var cell in from DataGridViewRow gridRow in dataGridView1.Rows
-                from DataGridViewCell cell in gridRow.Cells
-                select cell)
+                                 from DataGridViewCell cell in gridRow.Cells
+                                 select cell)
             {
                 if (cell.Value == "")
                     cell.Value = RandomChar();

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnDebug = new System.Windows.Forms.Button();
             this.btnShowAnswers = new System.Windows.Forms.Button();
             this.rtxtWords = new System.Windows.Forms.RichTextBox();
             this.lblFindWords = new System.Windows.Forms.Label();
@@ -42,7 +43,6 @@
             this.btnGo = new System.Windows.Forms.Button();
             this.txtSize = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.btnDebug = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -69,6 +69,17 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Grid Settings";
+            // 
+            // btnDebug
+            // 
+            this.btnDebug.Location = new System.Drawing.Point(113, 13);
+            this.btnDebug.Name = "btnDebug";
+            this.btnDebug.Size = new System.Drawing.Size(75, 23);
+            this.btnDebug.TabIndex = 12;
+            this.btnDebug.Text = "DEBUG";
+            this.btnDebug.UseVisualStyleBackColor = true;
+            this.btnDebug.Visible = false;
+            this.btnDebug.Click += new System.EventHandler(this.btnDebug_Click);
             // 
             // btnShowAnswers
             // 
@@ -100,7 +111,7 @@
             // 
             // btnRemoveWord
             // 
-            this.btnRemoveWord.Location = new System.Drawing.Point(113, 138);
+            this.btnRemoveWord.Location = new System.Drawing.Point(113, 171);
             this.btnRemoveWord.Name = "btnRemoveWord";
             this.btnRemoveWord.Size = new System.Drawing.Size(75, 23);
             this.btnRemoveWord.TabIndex = 8;
@@ -110,7 +121,7 @@
             // 
             // btnAddWord
             // 
-            this.btnAddWord.Location = new System.Drawing.Point(113, 94);
+            this.btnAddWord.Location = new System.Drawing.Point(113, 127);
             this.btnAddWord.Name = "btnAddWord";
             this.btnAddWord.Size = new System.Drawing.Size(75, 23);
             this.btnAddWord.TabIndex = 7;
@@ -121,7 +132,7 @@
             // lblRemoveWord
             // 
             this.lblRemoveWord.AutoSize = true;
-            this.lblRemoveWord.Location = new System.Drawing.Point(6, 124);
+            this.lblRemoveWord.Location = new System.Drawing.Point(6, 157);
             this.lblRemoveWord.Name = "lblRemoveWord";
             this.lblRemoveWord.Size = new System.Drawing.Size(82, 13);
             this.lblRemoveWord.TabIndex = 6;
@@ -130,7 +141,7 @@
             // lblAddWord
             // 
             this.lblAddWord.AutoSize = true;
-            this.lblAddWord.Location = new System.Drawing.Point(6, 77);
+            this.lblAddWord.Location = new System.Drawing.Point(6, 110);
             this.lblAddWord.Name = "lblAddWord";
             this.lblAddWord.Size = new System.Drawing.Size(61, 13);
             this.lblAddWord.TabIndex = 5;
@@ -138,7 +149,7 @@
             // 
             // txtRemoveWord
             // 
-            this.txtRemoveWord.Location = new System.Drawing.Point(6, 140);
+            this.txtRemoveWord.Location = new System.Drawing.Point(6, 173);
             this.txtRemoveWord.Name = "txtRemoveWord";
             this.txtRemoveWord.Size = new System.Drawing.Size(100, 20);
             this.txtRemoveWord.TabIndex = 4;
@@ -147,7 +158,7 @@
             // 
             // txtAddWord
             // 
-            this.txtAddWord.Location = new System.Drawing.Point(6, 96);
+            this.txtAddWord.Location = new System.Drawing.Point(6, 129);
             this.txtAddWord.Name = "txtAddWord";
             this.txtAddWord.Size = new System.Drawing.Size(100, 20);
             this.txtAddWord.TabIndex = 3;
@@ -201,17 +212,6 @@
             this.dataGridView1.Size = new System.Drawing.Size(580, 490);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseUp);
-            // 
-            // btnDebug
-            // 
-            this.btnDebug.Location = new System.Drawing.Point(113, 13);
-            this.btnDebug.Name = "btnDebug";
-            this.btnDebug.Size = new System.Drawing.Size(75, 23);
-            this.btnDebug.TabIndex = 12;
-            this.btnDebug.Text = "DEBUG";
-            this.btnDebug.UseVisualStyleBackColor = true;
-            this.btnDebug.Visible = false;
-            this.btnDebug.Click += new System.EventHandler(this.btnDebug_Click);
             // 
             // Form1
             // 
