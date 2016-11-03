@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using System.Diagnostics;
 
 namespace WordSearch
 {
@@ -43,7 +41,7 @@ namespace WordSearch
         //Letters for filling cells
         private const string Letters = "abcdefghijklmnopqrstuvwxyz";
 
-        private List<GridWord> words;
+        private readonly List<GridWord> words;
 
         private char[,] chars;
 
@@ -156,7 +154,6 @@ namespace WordSearch
             int rowChange = getRowChange(word.Direction);
             int columnChange = getColumnChange(word.Direction);
 
-            var step = 0;
             for (int i = 0; i < word.Length; i++)
             {
                 if (!dataGridView1.Rows[word.Row + (rowChange*i)].Cells[word.Column + (columnChange*i)].Selected)
@@ -179,7 +176,6 @@ namespace WordSearch
             int rowChange = getRowChange(word.Direction);
             int columnChange = getColumnChange(word.Direction);
 
-            var step = 0;
             for (int i = 0; i < word.Length; i++)
             {
                 dataGridView1.Rows[word.Row + (rowChange * i)].Cells[word.Column + (columnChange * i)].Style.BackColor =
@@ -195,7 +191,6 @@ namespace WordSearch
                 int rowChange = getRowChange(word.Direction);
                 int columnChange = getColumnChange(word.Direction);
 
-                var step = 0;
                 for (int i = 0; i < word.Length; i++)
                 {
                     dataGridView1.Rows[word.Row + (rowChange*i)].Cells[word.Column + (columnChange*i)].Style.BackColor =
@@ -262,16 +257,16 @@ namespace WordSearch
                     switch (direction)
                     {
                         case 0:
-                            row = checkOverflowUp(row, word.Length);
+                            row = CheckOverflowUp(row, word.Length);
                             break;
                         case 1:
-                            column = checkOverflowRight(column, word.Length);
+                            column = CheckOverflowRight(column, word.Length);
                             break;
                         case 2:
-                            row = checkOverflowDown(row, word.Length);
+                            row = CheckOverflowDown(row, word.Length);
                             break;
                         case 3:
-                            column = checkOverflowLeft(column, word.Length);
+                            column = CheckOverflowLeft(column, word.Length);
                             break;
                     }
 
@@ -408,28 +403,28 @@ namespace WordSearch
             return true;
         }
 
-        private int checkOverflowUp(int row, int length)
+        private static int CheckOverflowUp(int row, int length)
         {
             if ((row - length) < 0)
                 row -= row - length;
             return row;
         }
 
-        private int checkOverflowDown(int row, int length)
+        private int CheckOverflowDown(int row, int length)
         {
             if ((row + length) >= size)
                 row -= ((row + length) - size);
             return row;
         }
 
-        private int checkOverflowLeft(int column, int length)
+        private static int CheckOverflowLeft(int column, int length)
         {
             if ((column - length) < 0)
                 column -= column - length;
             return column;
         }
 
-        private int checkOverflowRight(int column, int length)
+        private int CheckOverflowRight(int column, int length)
         {
             if ((column + length) >= size)
                 column -= ((column + length) - size);
@@ -534,8 +529,8 @@ namespace WordSearch
 
         public GridWord(string word)
         {
-            this.Word = word;
-            this.Length = word.Length;
+            Word = word;
+            Length = word.Length;
         }
 
         public override string ToString()
