@@ -60,8 +60,8 @@ namespace WordSearch
             //Set size of GridWord Search
             dataGridView1.RowCount = dataGridView1.ColumnCount = size;
 
-            //Ensure grid is refreshed every time
-            //EmptyGrid();
+            //Ensure highlighting is removed on grid reload
+            RemoveAllHighlighting();
 
             //Work out where words will go
             WriteWordsInArray();
@@ -74,7 +74,7 @@ namespace WordSearch
         {
             //If it's not all letters show a message
             if (!txtAddWord.Text.All(char.IsLetter)
-                || txtAddWord.Text == "")
+                || txtAddWord.Text == string.Empty)
             {
                 MessageBox.Show("The value entered for size was not accepted." +
                                 "\n Please only enter letters", "Invalid Input");
@@ -83,7 +83,7 @@ namespace WordSearch
             //Add the word
             words.Add(new GridWord(txtAddWord.Text));
             //Clear the text box
-            txtAddWord.Text = "";
+            txtAddWord.Text = string.Empty;
             //Refresh word display
             DisplayWordsInBox();
         }
@@ -98,7 +98,7 @@ namespace WordSearch
                 break;
             }
             //Clear the text box
-            txtRemoveWord.Text = "";
+            txtRemoveWord.Text = string.Empty;
             //Refresh word display
             DisplayWordsInBox();
         }
@@ -133,7 +133,7 @@ namespace WordSearch
                 cell.Selected = false;
             }
 
-            DisplayWordsInBox();
+            //DisplayWordsInBox();
         }
 
         private void CheckAnswer()
@@ -183,6 +183,16 @@ namespace WordSearch
             }
         }
 
+        private void RemoveAllHighlighting()
+        {
+            foreach (var cell in from DataGridViewRow row in dataGridView1.Rows
+                                 from DataGridViewCell cell in row.Cells
+                                 select cell)
+            {
+                cell.Style.BackColor = Color.White;
+            }
+        }
+
         private void HideAnswers()
         {
             //UnHighlight words (Instead of doing all)
@@ -207,7 +217,7 @@ namespace WordSearch
         private void DisplayWordsInBox()
         {
             //Clear the box
-            rtxtWords.Text = "";
+            rtxtWords.Text = string.Empty;
             //Write out the words on seperate lines
 
             foreach (var word in words)
@@ -484,7 +494,7 @@ namespace WordSearch
 
         private void btnDebug_Click(object sender, EventArgs e)
         {
-            Stopwatch timer = new Stopwatch();
+            /*Stopwatch timer = new Stopwatch();
 
             timer.Start();
             btnGo_Click(sender, e);
@@ -510,7 +520,8 @@ namespace WordSearch
             timer.Start();
             btnGo_Click(sender, e);
             timer.Stop();
-            Debug.Print(timer.ElapsedMilliseconds.ToString());
+            Debug.Print(timer.ElapsedMilliseconds.ToString());*/
+
             /*foreach (var word in words)
             {
                 Debug.Print(word.ToString());
